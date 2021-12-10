@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">MAD_Project2_ITFS</string>
+    <string name="heading_addTourSpot">Add New Tour Spot</string>
+    <string name="button_addTourSpot">Add Tour Spot</string>
+
+    <string name="hint_tourSpotTitle">Title</string>
+    <string name="hint_tourSpotCounty">County</string>
+    <string name="hint_tourSpotDescription">Description</string>
+    <string name="hint_tourSpotLatitude">Latitude</string>
+    <string name="hint_tourSpotLongitude">Longitude</string>
+    <string name="hint_tourSpotContact">Contact Information</string>
+    <string name="hint_tourSpotOpen">Opening Time</string>
+    <string name="hint_tourSpotClose">Closing Time</string>
+    <string name="hint_tourSpotTicket">Ticket Required</string>
+
+    <string name="menu_addTourSpot">Add</string>
+    <string name="menu_cancel">Cancel</string>
+    <string name="menu_delete">Delete</string>
+    <string name="update_tourSpot">Update</string>
+    <string name="add_image">Add Image</string>
+    <string name="update_image">Update Image</string>
 </resources>
