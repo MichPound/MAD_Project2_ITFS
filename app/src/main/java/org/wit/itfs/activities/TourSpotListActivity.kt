@@ -50,7 +50,7 @@ class TourSpotListActivity : AppCompatActivity(), TourSpotListener {
     }
 
     override fun onTourSpotClick(tourSpot: TourSpotModel) {
-        val launcherIntent = Intent(this, MainActivity::class.java)
+        val launcherIntent = Intent(this, Weather::class.java)
         launcherIntent.putExtra("tourSpot_edit", tourSpot)
         startActivityForResult(launcherIntent,0)
     }
