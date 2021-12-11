@@ -104,7 +104,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_options, menu)
-        if (edit) menu.getItem(0).isVisible = true
+        if (edit) menu.getItem(1).isVisible = true
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -113,7 +113,10 @@ class MainActivity : AppCompatActivity() {
             R.id.item_cancel -> { finish() }
             R.id.item_delete -> {
                 app.tourSpots.delete(tourSpot)
-                finish()
+//                finish()
+                val intent = Intent(this, TourSpotListActivity::class.java)
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
+                startActivity(intent)
             }
         }
         return super.onOptionsItemSelected(item)

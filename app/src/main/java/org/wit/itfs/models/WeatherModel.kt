@@ -1,5 +1,8 @@
 package org.wit.itfs.models
 
+import android.os.Parcelable
+import kotlinx.parcelize.Parcelize
+
 data class WeatherModel(
         var coord: Coord,
         var weather: List<Weather>,
