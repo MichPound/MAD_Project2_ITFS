@@ -51,7 +51,7 @@ class MainActivity : AppCompatActivity() {
             binding.btnAdd.setText(R.string.update_tourSpot)
 
             Picasso.get()
-                .load(tourSpot.image)
+                .load(tourSpot.image.toString())
                 .into(binding.tourSpotImage)
             if (tourSpot.image != Uri.EMPTY) {
                 binding.chooseImage.setText(R.string.update_image)
@@ -130,9 +130,12 @@ class MainActivity : AppCompatActivity() {
                     RESULT_OK -> {
                         if (result.data != null) {
 //                            i("Got Result ${result.data!!.data}")
-                            tourSpot.image = result.data!!.data!!
+                            tourSpot.image = result.data?.data!!
+
+
+
                             Picasso.get()
-                                .load(tourSpot.image)
+                                .load(tourSpot.image.toString())
                                 .into(binding.tourSpotImage)
                             binding.chooseImage.setText(R.string.update_image)
                         } // end of if
