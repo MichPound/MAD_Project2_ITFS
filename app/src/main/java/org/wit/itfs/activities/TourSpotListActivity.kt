@@ -6,18 +6,24 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.SearchView
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
 import org.wit.itfs.R
 import org.wit.itfs.adapters.TourSpotAdapter
 import org.wit.itfs.adapters.TourSpotListener
 import org.wit.itfs.databinding.ActivityTourSpotListBinding
+import org.wit.itfs.helpers.showImagePicker
 import org.wit.itfs.main.MainApp
 import org.wit.itfs.models.TourSpotModel
+import kotlin.system.exitProcess
 
 class TourSpotListActivity : AppCompatActivity(), TourSpotListener {
 
     lateinit var app: MainApp
     private lateinit var binding: ActivityTourSpotListBinding
+    private lateinit var refreshIntentLauncher : ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +37,9 @@ class TourSpotListActivity : AppCompatActivity(), TourSpotListener {
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
-        binding.recyclerView.adapter = TourSpotAdapter(app.tourSpots.findAll(),this)
+//        binding.recyclerView.adapter = TourSpotAdapter(app.tourSpots.findAll(),this)
+        loadTourSpots()
+        registerRefreshCallback()
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -59,5 +67,21 @@ class TourSpotListActivity : AppCompatActivity(), TourSpotListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         binding.recyclerView.adapter?.notifyDataSetChanged()
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun loadTourSpots() {
+        showTourSpots(app.tourSpots.findAll())
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    fun showTourSpots (tourSpots: List<TourSpotModel>) {
+        binding.recyclerView.adapter = TourSpotAdapter(tourSpots, this)
+        binding.recyclerView.adapter?.notifyDataSetChanged()
+    }
+
+    private fun registerRefreshCallback() {
+        refreshIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { loadTourSpots() }
     }
 }

@@ -1,28 +1,43 @@
 package org.wit.itfs.models
 
+import android.content.ContentValues.TAG
+import android.content.Context
+import android.net.Uri
+import android.util.Log
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
+import com.google.gson.*
+import com.google.gson.reflect.TypeToken
+import org.wit.itfs.helpers.exists
+import org.wit.itfs.helpers.read
+import org.wit.itfs.helpers.write
+import java.lang.reflect.Type
 import java.util.*
 
-internal fun randID(): Long {
+const val jsonFile = "tourSpots.json"
+private val gsonBuilder: Gson = GsonBuilder().setPrettyPrinting()
+    .registerTypeAdapter(Uri::class.java, UriParser())
+    .create()
+private val listType = object : TypeToken<java.util.ArrayList<TourSpotModel>>() {}.type
+
+fun generateRandomId(): Long {
     return Random().nextLong()
 }
 
-class TourSpotMemStore : TourSpotStore {
+class TourSpotJsonStore(private val context: Context) : TourSpotStore {
 
-    private var tourSpots = ArrayList<TourSpotModel>()
-//    private val jsonFile = "tourSpots.json"
-//    private val gsonBuilder = GsonBuilder().setPrettyPrinting().create()
-//    private val listType = object : TypeToken<java.util.ArrayList<TourSpotModel>>() {}.type
+    var tourSpots = mutableListOf<TourSpotModel>()
 
-//    init {
-//        if (fileExists(jsonFile)) {
-//            load()
-//        }
-//    }
+    init {
+        if (exists(context, jsonFile)) {
+            deserialize()
+        }
+    }
 
     override fun create(tourSpot: TourSpotModel) {
         tourSpot.id = randID()
         tourSpots.add(tourSpot)
-//        save()
+        serialize()
     }
 
     override fun list() {
@@ -36,8 +51,8 @@ class TourSpotMemStore : TourSpotStore {
     }
 
     override fun update(updatedTourSpot: TourSpotModel) {
-        var tourSpot = find(updatedTourSpot.id)
-
+        val tourSpotList = findAll() as ArrayList<TourSpotModel>
+        var tourSpot: TourSpotModel? = tourSpotList.find { p -> p.id == updatedTourSpot.id }
         if (tourSpot != null) {
             tourSpot.image = updatedTourSpot.image
             tourSpot.title = updatedTourSpot.title
@@ -50,19 +65,19 @@ class TourSpotMemStore : TourSpotStore {
             tourSpot.closingTime = updatedTourSpot.closingTime
             tourSpot.ticket = updatedTourSpot.ticket
         }
-//        save()
+        serialize()
     }
 
-    override fun delete(tourSpot: TourSpotModel) {
-        tourSpots.remove(tourSpot)
-//        save()
+    override fun delete(placemark: TourSpotModel) {
+        tourSpots.remove(placemark)
+        serialize()
     }
 
     override fun find(index: Long): TourSpotModel? {
         return tourSpots.find { p -> p.id == index }
     }
 
-    override fun findAll(): List<TourSpotModel> {
+    override fun findAll(): MutableList<TourSpotModel> {
         return tourSpots
     }
 
@@ -148,13 +163,31 @@ class TourSpotMemStore : TourSpotStore {
         } while (tempCounty != "-1")
     }
 
-//    private fun save() {
-//        val jsonString = gsonBuilder.toJson(tourSpots, listType)
-//        writeFile(jsonFile, jsonString)
-//    }
+    private fun serialize() {
+        val jsonString = gsonBuilder.toJson(tourSpots, listType)
+        write(context, jsonFile, jsonString)
+    }
 
-//    private fun load() {
-//        val jsonString = readFile(jsonFile)
-//        tourSpots = Gson().fromJson(jsonString, listType)
-//    }
+    private fun deserialize() {
+        val jsonString = read(context, jsonFile)
+        tourSpots = gsonBuilder.fromJson(jsonString, listType)
+    }
+}
+
+class UriParser : JsonDeserializer<Uri>, JsonSerializer<Uri> {
+    override fun deserialize(
+        json: JsonElement?,
+        typeOfT: Type?,
+        context: JsonDeserializationContext?
+    ): Uri {
+        return Uri.parse(json?.asString)
+    }
+
+    override fun serialize(
+        src: Uri?,
+        typeOfSrc: Type?,
+        context: JsonSerializationContext?
+    ): JsonElement {
+        return JsonPrimitive(src.toString())
+    }
 }

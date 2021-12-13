@@ -1,18 +1,18 @@
 package org.wit.itfs.main
 
 import android.app.Application
-import org.wit.itfs.models.TourSpotMemStore
-import org.wit.itfs.models.TourSpotModel
-import org.wit.itfs.models.WeatherMemStore
-import org.wit.itfs.models.WeatherStore
+import org.wit.itfs.models.*
 import java.util.ArrayList
 
 class MainApp() : Application() {
 
-    val tourSpots = TourSpotMemStore()
-    val weather = WeatherMemStore()
+    lateinit var  tourSpots:TourSpotStore
+    lateinit var weather:WeatherStore
 
     override fun onCreate() {
         super.onCreate()
+//        tourSpots = TourSpotMemStore()
+        tourSpots = TourSpotJsonStore(applicationContext)
+        weather = WeatherMemStore()
     }
 }
