@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MAD_Project2_ITFS</string>
+    <string name="app_name">ITFS</string>
     <string name="heading_addTourSpot">Add New Tour Spot</string>
     <string name="button_addTourSpot">Add Tour Spot</string>
 

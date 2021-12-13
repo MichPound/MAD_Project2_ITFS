@@ -1,7 +1,11 @@
 package org.wit.itfs.models
 
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.Uri
+import android.util.Log
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.google.gson.*
 import com.google.gson.reflect.TypeToken
 import org.wit.itfs.helpers.exists

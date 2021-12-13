@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.SearchView
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -13,8 +14,10 @@ import org.wit.itfs.R
 import org.wit.itfs.adapters.TourSpotAdapter
 import org.wit.itfs.adapters.TourSpotListener
 import org.wit.itfs.databinding.ActivityTourSpotListBinding
+import org.wit.itfs.helpers.showImagePicker
 import org.wit.itfs.main.MainApp
 import org.wit.itfs.models.TourSpotModel
+import kotlin.system.exitProcess
 
 class TourSpotListActivity : AppCompatActivity(), TourSpotListener {
 

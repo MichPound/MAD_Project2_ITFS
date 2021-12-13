@@ -35,7 +35,7 @@ class TourSpotAdapter constructor(private var tourSpots: List<TourSpotModel>, pr
             binding.tourSpotTitle.text = tourSpot.title
 //            binding.tourSpotDescription.text = tourSpot.desc
             Picasso.get()
-                .load(tourSpot.image.toString())
+                .load(tourSpot.image)
                 .into(binding.tourSpotImage)
             binding.root.setOnClickListener { listener.onTourSpotClick(tourSpot) }
         }

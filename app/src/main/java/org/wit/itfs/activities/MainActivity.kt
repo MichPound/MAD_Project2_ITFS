@@ -8,6 +8,8 @@ import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import org.wit.itfs.R
 import org.wit.itfs.databinding.ActivityMainBinding
@@ -51,7 +53,7 @@ class MainActivity : AppCompatActivity() {
             binding.btnAdd.setText(R.string.update_tourSpot)
 
             Picasso.get()
-                .load(tourSpot.image.toString())
+                .load(tourSpot.image)
                 .into(binding.tourSpotImage)
             if (tourSpot.image != Uri.EMPTY) {
                 binding.chooseImage.setText(R.string.update_image)
@@ -71,6 +73,9 @@ class MainActivity : AppCompatActivity() {
             tourSpot.ticket = false
 
             if (!edit) {
+//                val db = Firebase.firestore
+//                db.collection("itfs").document("tourspot").set(tourSpot)
+
                 app.tourSpots.create(tourSpot.copy())
                 setResult(RESULT_OK)
                 finish()
@@ -135,7 +140,7 @@ class MainActivity : AppCompatActivity() {
 
 
                             Picasso.get()
-                                .load(tourSpot.image.toString())
+                                .load(tourSpot.image)
                                 .into(binding.tourSpotImage)
                             binding.chooseImage.setText(R.string.update_image)
                         } // end of if
