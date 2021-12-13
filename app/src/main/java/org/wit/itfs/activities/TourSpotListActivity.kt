@@ -39,6 +39,21 @@ class TourSpotListActivity : AppCompatActivity(), TourSpotListener {
         binding.recyclerView.layoutManager = layoutManager
 //        binding.recyclerView.adapter = TourSpotAdapter(app.tourSpots.findAll(),this)
         loadTourSpots()
+
+
+        binding.searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+
+            override fun onQueryTextChange(s: String): Boolean {
+                val search = binding.searchView.query.toString()
+                searchTourSpots(search)
+                return true
+            }
+
+            override fun onQueryTextSubmit(s: String): Boolean {
+                return true
+            }
+        })
+
         registerRefreshCallback()
     }
 
@@ -71,6 +86,10 @@ class TourSpotListActivity : AppCompatActivity(), TourSpotListener {
 
     private fun loadTourSpots() {
         showTourSpots(app.tourSpots.findAll())
+    }
+
+    private fun searchTourSpots(search: String) {
+        showTourSpots(app.tourSpots.search(search))
     }
 
     @SuppressLint("NotifyDataSetChanged")
