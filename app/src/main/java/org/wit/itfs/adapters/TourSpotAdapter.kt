@@ -1,9 +1,12 @@
 package org.wit.itfs.adapters
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
+import kotlinx.coroutines.withContext
 import org.wit.itfs.databinding.CardTourSpotBinding
 import org.wit.itfs.models.TourSpotModel
 
@@ -36,6 +39,8 @@ class TourSpotAdapter constructor(private var tourSpots: List<TourSpotModel>, pr
 //            binding.tourSpotDescription.text = tourSpot.desc
             Picasso.get()
                 .load(tourSpot.image)
+                .resize(1200,800)
+                .centerCrop()
                 .into(binding.tourSpotImage)
             binding.root.setOnClickListener { listener.onTourSpotClick(tourSpot) }
         }

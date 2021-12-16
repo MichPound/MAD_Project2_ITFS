@@ -54,6 +54,8 @@ class MainActivity : AppCompatActivity() {
 
             Picasso.get()
                 .load(tourSpot.image)
+                .resize(1200,800)
+                .centerCrop()
                 .into(binding.tourSpotImage)
             if (tourSpot.image != Uri.EMPTY) {
                 binding.chooseImage.setText(R.string.update_image)
@@ -141,6 +143,8 @@ class MainActivity : AppCompatActivity() {
 
                             Picasso.get()
                                 .load(tourSpot.image)
+                                .resize(1200,800)
+                                .centerCrop()
                                 .into(binding.tourSpotImage)
                             binding.chooseImage.setText(R.string.update_image)
                         } // end of if

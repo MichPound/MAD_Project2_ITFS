@@ -1,6 +1,9 @@
 package org.wit.itfs.activities
 
+import android.annotation.SuppressLint
 import android.content.Intent
+import android.icu.number.NumberFormatter.with
+import android.icu.number.NumberRangeFormatter.with
 import android.net.Uri
 import android.os.AsyncTask
 import androidx.appcompat.app.AppCompatActivity
@@ -8,12 +11,15 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.ProgressBar
+import androidx.core.net.toUri
 import com.android.volley.Request
 import com.android.volley.Response
 import com.android.volley.toolbox.JsonObjectRequest
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
+import okio.Timeout
 import org.json.JSONObject
 import org.wit.itfs.APIKEY
 import org.wit.itfs.R
@@ -22,15 +28,18 @@ import org.wit.itfs.databinding.ActivityWeatherBinding
 import org.wit.itfs.helpers.showImagePicker
 import org.wit.itfs.main.MainApp
 import org.wit.itfs.models.TourSpotModel
+import org.wit.itfs.models.WeatherModel
 import java.net.URL
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.roundToInt
 
 class Weather : AppCompatActivity() {
 
     private lateinit var binding: ActivityWeatherBinding
     lateinit var app: MainApp
     var tourSpot = TourSpotModel()
+    lateinit var currentWeather: WeatherModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -82,20 +91,26 @@ class Weather : AppCompatActivity() {
             }catch (e: Exception){
                 response = null
             }
+
             return response
         }
 
+        @SuppressLint("SetTextI18n")
         override fun onPostExecute(result: String?) {
             super.onPostExecute(result)
 
-            val currentWeather = app.weather.getWeather(result)
+            currentWeather = app.weather.getWeather(result)
 
+            val response = URL("https://openweathermap.org/img/w/${currentWeather.weather[0].icon}.png")
+            Glide.with(applicationContext).load(response).into(binding.tourSpotImage)
+
+            binding.weatherName.text = tourSpot.title
             binding.weatherMain.text = currentWeather.weather[0].main
             binding.weatherDesc.text = currentWeather.weather[0].description
-            binding.weatherTemp.text = (currentWeather.main.temp - 273.15).toString()
-            binding.weatherFeel.text = (currentWeather.main.feels_like - 273.15).toString()
-            binding.weatherMin.text = (currentWeather.main.temp_min - 273.15).toString()
-            binding.weatherMax.text = (currentWeather.main.temp_max - 273.15).toString()
+            binding.weatherTemp.text = (currentWeather.main.temp - 273.15).roundToInt().toString() + "\u2103"
+            binding.weatherFeel.text = (currentWeather.main.feels_like - 273.15).roundToInt().toString() + "\u2103"
+            binding.weatherMin.text = (currentWeather.main.temp_min - 273.15).roundToInt().toString() + "\u2103"
+            binding.weatherMax.text = (currentWeather.main.temp_max - 273.15).roundToInt().toString() + "\u2103"
             binding.weatherPressure.text = currentWeather.main.pressure.toString()
             binding.weatherHumidity.text = currentWeather.main.humidity.toString()
             binding.weatherSpeed.text = currentWeather.wind.speed.toString()
@@ -107,4 +122,5 @@ class Weather : AppCompatActivity() {
             binding.weatherSunset.text = currentWeather.sys.sunset.toString()
         }
     }
+
 }
