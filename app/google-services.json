@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "514374915733",
+    "project_id": "mad-project2-itfs",
+    "storage_bucket": "mad-project2-itfs.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:514374915733:android:c9140256ce96e1fe49ad9c",
+        "android_client_info": {
+          "package_name": "org.wit.itfs"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "514374915733-ch40oq0neha2gcroc5bnnqajcaojmhkj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMj5V7NpDUczI2pVnnOaBDu-rmD-5gjaE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "514374915733-ch40oq0neha2gcroc5bnnqajcaojmhkj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
