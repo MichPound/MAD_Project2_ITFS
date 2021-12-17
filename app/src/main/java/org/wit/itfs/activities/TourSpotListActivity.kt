@@ -24,7 +24,7 @@ class TourSpotListActivity : AppCompatActivity(), TourSpotListener {
     private lateinit var binding: ActivityTourSpotListBinding
     private lateinit var refreshIntentLauncher: ActivityResultLauncher<Intent>
     lateinit var auth: FirebaseAuth
-    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
+    private lateinit var mapIntentLauncher: ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,7 +40,6 @@ class TourSpotListActivity : AppCompatActivity(), TourSpotListener {
 
         val layoutManager = LinearLayoutManager(this)
         binding.recyclerView.layoutManager = layoutManager
-//        binding.recyclerView.adapter = TourSpotAdapter(app.tourSpots.findAll(),this)
         loadTourSpots()
 
 
@@ -73,10 +72,9 @@ class TourSpotListActivity : AppCompatActivity(), TourSpotListener {
             }
             R.id.item_map -> {
 
-
                 val test = arrayListOf<TourSpotModel>()
 
-                for (spot in app.tourSpots.findAll()){
+                for (spot in app.tourSpots.findAll()) {
                     test.add(spot)
                 }
 

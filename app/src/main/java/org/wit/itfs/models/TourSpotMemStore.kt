@@ -9,20 +9,11 @@ internal fun randID(): Long {
 class TourSpotMemStore : TourSpotStore {
 
     private var tourSpots = ArrayList<TourSpotModel>()
-//    private val jsonFile = "tourSpots.json"
-//    private val gsonBuilder = GsonBuilder().setPrettyPrinting().create()
-//    private val listType = object : TypeToken<java.util.ArrayList<TourSpotModel>>() {}.type
 
-//    init {
-//        if (fileExists(jsonFile)) {
-//            load()
-//        }
-//    }
 
     override fun create(tourSpot: TourSpotModel) {
         tourSpot.id = randID()
         tourSpots.add(tourSpot)
-//        save()
     }
 
     override fun list() {
@@ -50,12 +41,10 @@ class TourSpotMemStore : TourSpotStore {
             tourSpot.closingTime = updatedTourSpot.closingTime
             tourSpot.ticket = updatedTourSpot.ticket
         }
-//        save()
     }
 
     override fun delete(tourSpot: TourSpotModel) {
         tourSpots.remove(tourSpot)
-//        save()
     }
 
     override fun find(index: Long): TourSpotModel? {
@@ -147,14 +136,4 @@ class TourSpotMemStore : TourSpotStore {
             }
         } while (tempCounty != "-1")
     }
-
-//    private fun save() {
-//        val jsonString = gsonBuilder.toJson(tourSpots, listType)
-//        writeFile(jsonFile, jsonString)
-//    }
-
-//    private fun load() {
-//        val jsonString = readFile(jsonFile)
-//        tourSpots = Gson().fromJson(jsonString, listType)
-//    }
 }

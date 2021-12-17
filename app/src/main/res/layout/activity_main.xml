@@ -158,7 +158,7 @@
                     android:padding="8dp"
                     android:textSize="14sp" />
 
-                <EditText
+                <Switch
                     android:id="@+id/tourSpotTicket"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
@@ -182,11 +182,6 @@
                     android:text="@string/button_addTourSpot"
                     android:textSize="16sp" />
 
-                <Button
-                    android:id="@+id/button"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Button" />
             </LinearLayout>
         </ScrollView>
 

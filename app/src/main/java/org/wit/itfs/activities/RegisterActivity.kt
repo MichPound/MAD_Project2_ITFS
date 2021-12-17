@@ -29,20 +29,29 @@ class RegisterActivity : AppCompatActivity() {
 
             binding.progressBar2.visibility = View.VISIBLE
 
-            auth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        binding.progressBar2.visibility = View.INVISIBLE
-                        finish()
-                    } else {
-                        binding.progressBar2.visibility = View.INVISIBLE
-                        Toast.makeText(
-                            this,
-                            task.exception!!.message.toString(),
-                            Toast.LENGTH_SHORT
-                        ).show()
+            if (email != "" && password != "") {
+                auth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            binding.progressBar2.visibility = View.INVISIBLE
+                            finish()
+                        } else {
+                            binding.progressBar2.visibility = View.INVISIBLE
+                            Toast.makeText(
+                                this,
+                                task.exception!!.message.toString(),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
-                }
+            } else {
+                binding.progressBar2.visibility = View.INVISIBLE
+                Toast.makeText(
+                    this,
+                    "Please fill in all fields!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
         binding.textView5.setOnClickListener() {

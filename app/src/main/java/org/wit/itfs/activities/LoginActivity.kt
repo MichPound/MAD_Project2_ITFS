@@ -30,21 +30,30 @@ class LoginActivity : AppCompatActivity() {
 
             binding.progressBar.visibility = View.VISIBLE
 
-            auth.signInWithEmailAndPassword(email, password)
-                .addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
-                        binding.progressBar.visibility = View.INVISIBLE
-                        val launcherIntent = Intent(this, TourSpotListActivity::class.java)
-                        startActivityForResult(launcherIntent, 0)
-                    } else {
-                        binding.progressBar.visibility = View.INVISIBLE
-                        Toast.makeText(
-                            this,
-                            task.exception!!.message.toString(),
-                            Toast.LENGTH_SHORT
-                        ).show()
+            if (email != "" && password != "") {
+                auth.signInWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(this) { task ->
+                        if (task.isSuccessful) {
+                            binding.progressBar.visibility = View.INVISIBLE
+                            val launcherIntent = Intent(this, TourSpotListActivity::class.java)
+                            startActivityForResult(launcherIntent, 0)
+                        } else {
+                            binding.progressBar.visibility = View.INVISIBLE
+                            Toast.makeText(
+                                this,
+                                task.exception!!.message.toString(),
+                                Toast.LENGTH_SHORT
+                            ).show()
+                        }
                     }
-                }
+            } else {
+                binding.progressBar.visibility = View.INVISIBLE
+                Toast.makeText(
+                    this,
+                    "Please fill in all fields!",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
         }
 
         binding.textView4.setOnClickListener() {

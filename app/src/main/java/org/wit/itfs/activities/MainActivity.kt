@@ -2,33 +2,24 @@ package org.wit.itfs.activities
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log.i
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
-import com.google.android.gms.tasks.OnSuccessListener
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
 import org.wit.itfs.R
 import org.wit.itfs.databinding.ActivityMainBinding
 import org.wit.itfs.helpers.showImagePicker
 import org.wit.itfs.main.MainApp
-import org.wit.itfs.models.TourSpotJsonStore
 import org.wit.itfs.models.TourSpotModel
 
 class MainActivity : AppCompatActivity() {
 
-    //    var longitude : View ?= null
-//    var latitude : View ?= null
-//    private lateinit var fusedLocationClient: FusedLocationProviderClient
-//    lateinit var locationManager: LocationManager
     private lateinit var binding: ActivityMainBinding
     private lateinit var imageIntentLauncher: ActivityResultLauncher<Intent>
-    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
 
     var tourSpot = TourSpotModel()
     lateinit var app: MainApp
@@ -53,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             binding.tourSpotContact.setText(tourSpot.contactInfo)
             binding.tourSpotOpen.setText(tourSpot.openTime.toString())
             binding.tourSpotClose.setText(tourSpot.closingTime.toString())
-            binding.tourSpotTicket.setText("Ticket")
+            binding.tourSpotTicket.isChecked = tourSpot.ticket
             binding.btnAdd.setText(R.string.update_tourSpot)
 
             Picasso.get()
@@ -67,27 +58,76 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnAdd.setOnClickListener() {
-            tourSpot.title = binding.tourSpotTitle.text.toString()
-            tourSpot.county = binding.tourSpotCounty.text.toString()
-            tourSpot.desc = binding.tourSpotDescription.text.toString()
-            tourSpot.lat = binding.tourSpotLatitude.text.toString().toDouble()
-            tourSpot.long = binding.tourSpotLongitude.text.toString().toDouble()
-            tourSpot.contactInfo = binding.tourSpotContact.text.toString()
-            tourSpot.openTime = binding.tourSpotOpen.text.toString().toDouble()
-            tourSpot.closingTime = binding.tourSpotClose.text.toString().toDouble()
-//            tourSpot.ticket = binding.tourSpotTicket.text.toString().toBoolean()
-            tourSpot.ticket = false
 
-            if (!edit) {
-                app.tourSpots.create(tourSpot.copy())
-                setResult(RESULT_OK)
-                finish()
+            if (binding.tourSpotTitle.text.toString() == "") {
+                Toast.makeText(
+                    this,
+                    "Please enter title",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (binding.tourSpotCounty.text.toString() == "") {
+                Toast.makeText(
+                    this,
+                    "Please enter county",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (binding.tourSpotDescription.text.toString() == "") {
+                Toast.makeText(
+                    this,
+                    "Please enter description",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (binding.tourSpotLatitude.text.toString().toDoubleOrNull() == null) {
+                Toast.makeText(
+                    this,
+                    "please enter latitude (numeric)",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (binding.tourSpotLongitude.text.toString().toDoubleOrNull() == null) {
+                Toast.makeText(
+                    this,
+                    "Please enter longitude (numeric)",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (binding.tourSpotContact.text.toString() == "") {
+                Toast.makeText(
+                    this,
+                    "Please enter contact details",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (binding.tourSpotOpen.text.toString().toDoubleOrNull() == null) {
+                Toast.makeText(
+                    this,
+                    "Please enter opening time (numeric)",
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else if (binding.tourSpotClose.text.toString().toDoubleOrNull() == null) {
+                Toast.makeText(
+                    this,
+                    "Please enter closing time (numeric)",
+                    Toast.LENGTH_SHORT
+                ).show()
             } else {
-                app.tourSpots.update(tourSpot.copy())
-                setResult(RESULT_OK)
-                finish()
-            }
+                tourSpot.title = binding.tourSpotTitle.text.toString()
+                tourSpot.county = binding.tourSpotCounty.text.toString()
+                tourSpot.desc = binding.tourSpotDescription.text.toString()
+                tourSpot.lat = binding.tourSpotLatitude.text.toString().toDouble()
+                tourSpot.long = binding.tourSpotLongitude.text.toString().toDouble()
+                tourSpot.contactInfo = binding.tourSpotContact.text.toString()
+                tourSpot.openTime = binding.tourSpotOpen.text.toString().toDouble()
+                tourSpot.closingTime = binding.tourSpotClose.text.toString().toDouble()
+                tourSpot.ticket = binding.tourSpotTicket.isChecked
 
+                if (!edit) {
+                    app.tourSpots.create(tourSpot.copy())
+                    setResult(RESULT_OK)
+                    finish()
+                } else {
+                    app.tourSpots.update(tourSpot.copy())
+                    setResult(RESULT_OK)
+                    finish()
+                }
+            }
         }
 
         binding.chooseImage.setOnClickListener {
@@ -95,23 +135,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         registerImagePickerCallback()
-
-
-//        setContentView(R.layout.activity_main)
-
-//        longitude = findViewById<>(R.id.longitudeVal)
-//        latitude = findViewById<>(R.id.lataitudeVal)
-//        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-
-//        https://medium.com/swlh/how-to-get-the-current-location-through-the-android-application-in-kotlin-and-then-save-the-e3a977059f15
-
-//        R.id. = "this is a test"
-
-        binding.button.setOnClickListener {
-            val launcherIntent = Intent(this, MapActivity::class.java)
-            mapIntentLauncher.launch(launcherIntent)
-        }
-        registerMapCallback()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -127,19 +150,12 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.item_delete -> {
                 app.tourSpots.delete(tourSpot)
-//                finish()
                 val intent = Intent(this, TourSpotListActivity::class.java)
                 intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK
                 startActivity(intent)
             }
         }
         return super.onOptionsItemSelected(item)
-    }
-
-    private fun registerMapCallback() {
-        mapIntentLauncher =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
-            { print("Map Loaded") }
     }
 
     private fun registerImagePickerCallback() {
@@ -149,10 +165,7 @@ class MainActivity : AppCompatActivity() {
                 when (result.resultCode) {
                     RESULT_OK -> {
                         if (result.data != null) {
-//                            i("Got Result ${result.data!!.data}")
                             tourSpot.image = result.data?.data!!.toString()
-
-
 
                             Picasso.get()
                                 .load(tourSpot.image.toUri())
@@ -160,20 +173,11 @@ class MainActivity : AppCompatActivity() {
                                 .centerCrop()
                                 .into(binding.tourSpotImage)
                             binding.chooseImage.setText(R.string.update_image)
-                        } // end of if
+                        }
                     }
                     RESULT_CANCELED -> {}
                     else -> {}
                 }
             }
     }
-
-//    private fun getLocation() {
-//        locationManager = getSystemService(Context.LOCATION_SERVICE) as LocationManager
-//        if ((ContextCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED)) {
-//            ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 2)
-//        }
-//        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 5f, this)
-//    }
-
 }
