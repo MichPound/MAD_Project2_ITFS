@@ -6,7 +6,7 @@ import java.util.ArrayList
 
 class MainApp() : Application() {
 
-    lateinit var  tourSpots:TourSpotStore
+    lateinit var tourSpots:TourSpotStore
     lateinit var weather:WeatherStore
 
     override fun onCreate() {

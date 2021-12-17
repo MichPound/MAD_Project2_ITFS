@@ -8,7 +8,7 @@ import kotlinx.parcelize.Parcelize
 data class TourSpotModel(
         // Required Fields.
         var id: Long = 0,
-        var image: Uri = Uri.EMPTY,
+        var image: String = "",
         var title: String = "",
         var county: String = "",
         var desc: String = "",

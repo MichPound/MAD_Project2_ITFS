@@ -1,13 +1,14 @@
 package org.wit.itfs.activities
 
 import android.content.Intent
-import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.net.toUri
+import com.google.android.gms.tasks.OnSuccessListener
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.squareup.picasso.Picasso
@@ -15,16 +16,17 @@ import org.wit.itfs.R
 import org.wit.itfs.databinding.ActivityMainBinding
 import org.wit.itfs.helpers.showImagePicker
 import org.wit.itfs.main.MainApp
+import org.wit.itfs.models.TourSpotJsonStore
 import org.wit.itfs.models.TourSpotModel
 
 class MainActivity : AppCompatActivity() {
 
-//    var longitude : View ?= null
+    //    var longitude : View ?= null
 //    var latitude : View ?= null
 //    private lateinit var fusedLocationClient: FusedLocationProviderClient
 //    lateinit var locationManager: LocationManager
     private lateinit var binding: ActivityMainBinding
-    private lateinit var imageIntentLauncher : ActivityResultLauncher<Intent>
+    private lateinit var imageIntentLauncher: ActivityResultLauncher<Intent>
 
     var tourSpot = TourSpotModel()
     lateinit var app: MainApp
@@ -53,11 +55,11 @@ class MainActivity : AppCompatActivity() {
             binding.btnAdd.setText(R.string.update_tourSpot)
 
             Picasso.get()
-                .load(tourSpot.image)
-                .resize(1200,800)
+                .load(tourSpot.image.toUri())
+                .resize(1200, 800)
                 .centerCrop()
                 .into(binding.tourSpotImage)
-            if (tourSpot.image != Uri.EMPTY) {
+            if (tourSpot.image != "") {
                 binding.chooseImage.setText(R.string.update_image)
             }
         }
@@ -75,9 +77,6 @@ class MainActivity : AppCompatActivity() {
             tourSpot.ticket = false
 
             if (!edit) {
-//                val db = Firebase.firestore
-//                db.collection("itfs").document("tourspot").set(tourSpot)
-
                 app.tourSpots.create(tourSpot.copy())
                 setResult(RESULT_OK)
                 finish()
@@ -117,7 +116,9 @@ class MainActivity : AppCompatActivity() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         when (item.itemId) {
-            R.id.item_cancel -> { finish() }
+            R.id.item_cancel -> {
+                finish()
+            }
             R.id.item_delete -> {
                 app.tourSpots.delete(tourSpot)
 //                finish()
@@ -133,23 +134,24 @@ class MainActivity : AppCompatActivity() {
         imageIntentLauncher =
             registerForActivityResult(ActivityResultContracts.StartActivityForResult())
             { result ->
-                when(result.resultCode){
+                when (result.resultCode) {
                     RESULT_OK -> {
                         if (result.data != null) {
 //                            i("Got Result ${result.data!!.data}")
-                            tourSpot.image = result.data?.data!!
+                            tourSpot.image = result.data?.data!!.toString()
 
 
 
                             Picasso.get()
-                                .load(tourSpot.image)
-                                .resize(1200,800)
+                                .load(tourSpot.image.toUri())
+                                .resize(1200, 800)
                                 .centerCrop()
                                 .into(binding.tourSpotImage)
                             binding.chooseImage.setText(R.string.update_image)
                         } // end of if
                     }
-                    RESULT_CANCELED -> { } else -> { }
+                    RESULT_CANCELED -> {}
+                    else -> {}
                 }
             }
     }

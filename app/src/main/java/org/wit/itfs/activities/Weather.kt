@@ -50,7 +50,6 @@ class Weather : AppCompatActivity() {
         app = application as MainApp
 
         weatherTask().execute()
-
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {

@@ -3,6 +3,7 @@ package org.wit.itfs.adapters
 import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.squareup.picasso.Picasso
@@ -38,7 +39,7 @@ class TourSpotAdapter constructor(private var tourSpots: List<TourSpotModel>, pr
             binding.tourSpotTitle.text = tourSpot.title
 //            binding.tourSpotDescription.text = tourSpot.desc
             Picasso.get()
-                .load(tourSpot.image)
+                .load(tourSpot.image.toUri())
                 .resize(1200,800)
                 .centerCrop()
                 .into(binding.tourSpotImage)
