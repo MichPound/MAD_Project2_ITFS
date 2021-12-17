@@ -24,6 +24,7 @@ class TourSpotListActivity : AppCompatActivity(), TourSpotListener {
     private lateinit var binding: ActivityTourSpotListBinding
     private lateinit var refreshIntentLauncher: ActivityResultLauncher<Intent>
     lateinit var auth: FirebaseAuth
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,6 +57,7 @@ class TourSpotListActivity : AppCompatActivity(), TourSpotListener {
             }
         })
 
+        registerMapCallback()
         registerRefreshCallback()
     }
 
@@ -66,10 +68,24 @@ class TourSpotListActivity : AppCompatActivity(), TourSpotListener {
                 startActivityForResult(launcherIntent, 0)
             }
             R.id.item_logout -> {
-//                auth = FirebaseAuth.getInstance()
                 auth.signOut()
                 finish()
             }
+            R.id.item_map -> {
+
+
+                val test = arrayListOf<TourSpotModel>()
+
+                for (spot in app.tourSpots.findAll()){
+                    test.add(spot)
+                }
+
+                val launcherIntent = Intent(this, MapActivity::class.java)
+                    .putExtra("spots", test)
+                mapIntentLauncher.launch(launcherIntent)
+
+            }
+
         }
         return super.onOptionsItemSelected(item)
     }
@@ -89,6 +105,12 @@ class TourSpotListActivity : AppCompatActivity(), TourSpotListener {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         binding.recyclerView.adapter?.notifyDataSetChanged()
         super.onActivityResult(requestCode, resultCode, data)
+    }
+
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { print("Map Loaded") }
     }
 
     private fun loadTourSpots() {

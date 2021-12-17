@@ -32,5 +32,7 @@
     <string name="title_activity_login">LoginActivity</string>
     <string name="title_activity_login2">LoginActivity2</string>
 
-    <string name="menu_logout">Delete</string>
+    <string name="menu_logout">Logout</string>
+    <string name="menu_map">Map</string>
+    <string name="title_activity_map">MapActivity</string>
 </resources>

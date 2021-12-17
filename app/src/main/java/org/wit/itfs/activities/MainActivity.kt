@@ -2,6 +2,7 @@ package org.wit.itfs.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log.i
 import android.view.Menu
 import android.view.MenuItem
 import androidx.activity.result.ActivityResultLauncher
@@ -27,6 +28,7 @@ class MainActivity : AppCompatActivity() {
 //    lateinit var locationManager: LocationManager
     private lateinit var binding: ActivityMainBinding
     private lateinit var imageIntentLauncher: ActivityResultLauncher<Intent>
+    private lateinit var mapIntentLauncher : ActivityResultLauncher<Intent>
 
     var tourSpot = TourSpotModel()
     lateinit var app: MainApp
@@ -105,7 +107,11 @@ class MainActivity : AppCompatActivity() {
 
 //        R.id. = "this is a test"
 
-
+        binding.button.setOnClickListener {
+            val launcherIntent = Intent(this, MapActivity::class.java)
+            mapIntentLauncher.launch(launcherIntent)
+        }
+        registerMapCallback()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -128,6 +134,12 @@ class MainActivity : AppCompatActivity() {
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun registerMapCallback() {
+        mapIntentLauncher =
+            registerForActivityResult(ActivityResultContracts.StartActivityForResult())
+            { print("Map Loaded") }
     }
 
     private fun registerImagePickerCallback() {
