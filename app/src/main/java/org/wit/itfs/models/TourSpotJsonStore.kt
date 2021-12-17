@@ -1,9 +1,7 @@
 package org.wit.itfs.models
 
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.*
@@ -28,6 +26,8 @@ class TourSpotJsonStore(private val context: Context) : TourSpotStore {
 
     var tourSpots = mutableListOf<TourSpotModel>()
 
+    val db = Firebase.firestore
+
     init {
         if (exists(context, jsonFile)) {
             deserialize()
@@ -38,6 +38,8 @@ class TourSpotJsonStore(private val context: Context) : TourSpotStore {
         tourSpot.id = randID()
         tourSpots.add(tourSpot)
         serialize()
+
+        db.collection("itfs").document(tourSpot.id.toString()).set(tourSpot)
     }
 
     override fun list() {
@@ -66,11 +68,15 @@ class TourSpotJsonStore(private val context: Context) : TourSpotStore {
             tourSpot.ticket = updatedTourSpot.ticket
         }
         serialize()
+
+        db.collection("itfs").document(updatedTourSpot.id.toString()).set(updatedTourSpot)
     }
 
     override fun delete(placemark: TourSpotModel) {
         tourSpots.remove(placemark)
         serialize()
+
+        db.collection("itfs").document(placemark.id.toString()).delete()
     }
 
     override fun find(index: Long): TourSpotModel? {
